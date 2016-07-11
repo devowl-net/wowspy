@@ -15,8 +15,6 @@ namespace WowSpy.Serialization
 
         public string ServerName { get; set; }
 
-        public List<PlayerObj> Players { get; set; }
-
         public override string ToString()
         {
             return string.Format("[{0}-{1}] LastUpdate: [{2}]", 

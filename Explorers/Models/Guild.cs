@@ -9,8 +9,8 @@ namespace WowDotNetAPI.Models
     [DataContract]
     public enum UnitSide
     {
-        ALLIANCE = 0,
-        HORDE = 1
+        Alliance = 0,
+        Horde = 1
     }
     
     [DataContract]
@@ -41,15 +41,20 @@ namespace WowDotNetAPI.Models
         public GuildEmblem Emblem { get; set; }
 
         [DataMember(Name = "members")]
-        public IEnumerable<GuildMember> Members { get; set; }
+        public GuildMember[] Members { get; set; }
 
         [DataMember(Name = "achievements")]
         public Achievements Achievements { get; set; }
 
         [DataMember(Name = "news")]
-        public IEnumerable<GuildNews> News { get; set; }
+        public GuildNews[] News { get; set; }
 
         public UnitSide Side { get { return (UnitSide)Enum.Parse(typeof(UnitSide), Enum.GetName(typeof(UnitSide), side)); } }
 
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() ^ Realm.GetHashCode() ^ Battlegroup.GetHashCode() ^ side.GetHashCode() ^
+                   AchievementPoints.GetHashCode();
+        }
     }
 }

@@ -9,6 +9,35 @@ namespace WowSpy.Utils
 {
     public static class Extentions
     {
+        private static readonly Dictionary<string, string> RuEuMapping = new Dictionary<string, string>()
+        {
+            { "Гордунни",           "Gordunni" },
+            { "Гром",               "Grom" },
+            { "Корольлич",          "Lich King" },
+            { "Пиратскаябухта",     "Booty Bay" },
+            { "Подземье",           "Deephome" },
+            { "Разувий",            "Razuvious" },
+            { "Ревущийфьорд",       "Howling Fjord" },
+            { "СвежевательДуш",     "Soulflayer" },
+            { "Седогрив",           "Greymane" },
+            { "СтражСмерти",        "Deathguard" },
+            { "Термоштепсель",      "Thermaplugg" },
+            { "ТкачСмерти",         "Deathweaver" },
+            { "ЧерныйШрам",         "Blackscar" },
+            { "Ясеневыйлес",        "Ashenvale" },
+            { "Азурегос",           "Azuregos" },
+            { "Борейскаятундра",    "Borean Tundra" },
+            { "ВечнаяПесня",        "Eversong" },
+            { "Дракономор",         "Fordragon" },
+            { "Галакронд",          "Galakrond" },
+            { "Голдринн",           "Goldrinn" },
+        };
+
+        public static string RussianToEnglishRealm(string realmName)
+        {
+            return RuEuMapping[new string(realmName.Where(char.IsLetter).ToArray())];
+        }
+
         public static void AddOrUpdate(this Dictionary<PlayerObj, List<KeyValuePair<string, IEnumerable<PlayerObj>>>> dictionary,
             PlayerObj key, IEnumerable<KeyValuePair<string, IEnumerable<PlayerObj>>> value)
         {

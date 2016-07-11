@@ -56,15 +56,7 @@ namespace WowSpy {
         #line hidden
         
         
-        #line 27 "..\..\MainWindow.xaml"
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        internal System.Windows.Controls.CheckBox ChGuildFullCheck;
-        
-        #line default
-        #line hidden
-        
-        
-        #line 88 "..\..\MainWindow.xaml"
+        #line 85 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.TextBox CheckingGuildNameTextBox;
         
@@ -72,7 +64,7 @@ namespace WowSpy {
         #line hidden
         
         
-        #line 106 "..\..\MainWindow.xaml"
+        #line 103 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.TextBox TbRaidPlayersForCheck;
         
@@ -156,57 +148,46 @@ namespace WowSpy {
             #line hidden
             return;
             case 8:
-            this.ChGuildFullCheck = ((System.Windows.Controls.CheckBox)(target));
+            this.CheckingGuildNameTextBox = ((System.Windows.Controls.TextBox)(target));
             return;
             case 9:
             
-            #line 28 "..\..\MainWindow.xaml"
-            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.StartScan);
+            #line 87 "..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddGuildToChecking);
             
             #line default
             #line hidden
             return;
             case 10:
-            this.CheckingGuildNameTextBox = ((System.Windows.Controls.TextBox)(target));
+            
+            #line 88 "..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.RemoveGuildToChecking);
+            
+            #line default
+            #line hidden
             return;
             case 11:
             
-            #line 90 "..\..\MainWindow.xaml"
-            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.AddGuildToChecking);
+            #line 91 "..\..\MainWindow.xaml"
+            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.CheckGuildList);
             
             #line default
             #line hidden
             return;
             case 12:
             
-            #line 91 "..\..\MainWindow.xaml"
-            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.RemoveGuildToChecking);
-            
-            #line default
-            #line hidden
-            return;
-            case 13:
-            
-            #line 94 "..\..\MainWindow.xaml"
-            ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.CheckGuildList);
-            
-            #line default
-            #line hidden
-            return;
-            case 14:
-            
-            #line 95 "..\..\MainWindow.xaml"
+            #line 92 "..\..\MainWindow.xaml"
             ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.CheckingGuildStartScan);
             
             #line default
             #line hidden
             return;
-            case 15:
+            case 13:
             this.TbRaidPlayersForCheck = ((System.Windows.Controls.TextBox)(target));
             return;
-            case 16:
+            case 14:
             
-            #line 108 "..\..\MainWindow.xaml"
+            #line 105 "..\..\MainWindow.xaml"
             ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.CheckPlayersList);
             
             #line default

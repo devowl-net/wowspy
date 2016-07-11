@@ -87,7 +87,6 @@
     <Compile Include="Serialization\PetObj.cs" />
     <Compile Include="Serialization\PlayerObj.cs" />
     <Compile Include="Utils\Extentions.cs" />
-    <Compile Include="Utils\PlayersUtils.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
