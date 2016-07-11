@@ -89,16 +89,16 @@ namespace WowDotNetAPI.Models
         public CharacterStats Stats { get; set; }
 
         [DataMember(Name = "talents")]
-        public IEnumerable<CharacterTalent> Talents { get; set; }
+        public CharacterTalent[] Talents { get; set; }
 
         [DataMember(Name = "items")]
         public CharacterEquipment Items { get; set; }
 
         [DataMember(Name = "reputation")]
-        public IEnumerable<CharacterReputation> Reputation { get; set; }
+        public CharacterReputation[] Reputation { get; set; }
 
         [DataMember(Name = "titles")]
-        public IEnumerable<CharacterTitle> Titles { get; set; }
+        public CharacterTitle[] Titles { get; set; }
 
         [DataMember(Name = "professions")]
         public CharacterProfessions Professions { get; set; }
@@ -113,25 +113,25 @@ namespace WowDotNetAPI.Models
         public CharacterMounts Mounts { get; set; }
 
         [DataMember(Name = "hunterPets")]
-        public IEnumerable<CharacterHunterPet> HunterPets { get; set; }
+        public CharacterHunterPet[] HunterPets { get; set; }
 
         [DataMember(Name = "pets")]
         public CharacterPets Pets { get; set; }
 
         [DataMember(Name = "petSlots")]
-        public IEnumerable<CharacterPetSlot> PetSlots { get; set; }
+        public CharacterPetSlot[] PetSlots { get; set; }
 
         [DataMember(Name = "progression")]
         public Progression Progression { get; set; }
 
         [DataMember(Name = "feed")]
-        public IEnumerable<CharacterFeed> Feed { get; set; }
+        public CharacterFeed[] Feed { get; set; }
 
         [DataMember(Name = "pvp")]
         public CharacterPvP PvP { get; set; }
 
         [DataMember(Name = "quests")]
-        public IEnumerable<int> Quests { get; set; }
+        public int[] Quests { get; set; }
 
         public CharacterClass Class { get { return (CharacterClass)Enum.Parse(typeof(CharacterClass), Enum.GetName(typeof(CharacterClass), @class).Replace(' ', '_')); } }
         public CharacterRace @Race { get { return (CharacterRace)Enum.Parse(typeof(CharacterRace), Enum.GetName(typeof(CharacterRace), race).Replace(' ', '_')); } }

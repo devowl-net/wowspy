@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,6 +12,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Xml.Serialization;
 using WowDotNetAPI;
+using WowDotNetAPI.Models;
 using WowSpy.Serialization;
 using WowSpy.Utils;
 
@@ -52,9 +54,46 @@ namespace WowSpy
 
         public string SelectedGuildCheckingServerName { get; set; }
 
+        private bool IsEqual(Character first, Character second)
+        {
+            return first.PetSlots.SequenceEqual(second.PetSlots);
+        }
+
         private void Initialize()
         {
             _explorer = new WowExplorer(Region.EU, Locale.en_US, _apiKey);
+            
+            var users1 = _explorer.GetGuild("Страж Смерти", "Ф О Р П О С Т", GuildOptions.GetMembers);
+            //var users2 = _explorer.GetGuild("Страж Смерти", "Имперские штурмовики", GuildOptions.GetMembers);
+            //var me = _explorer.GetCharacter("Страж Смерти", "Ярославль", CharacterOptions.GetPetSlots);
+            var users2 = _explorer.GetGuild("Gordunni", "Эшелон", GuildOptions.GetMembers);
+            var me = _explorer.GetCharacter("Blackscar", "Автодор", CharacterOptions.GetPetSlots);
+            
+            var usersArray = users2.Members.ToArray();
+            Parallel.ForEach(usersArray, (user) =>
+            {
+                try
+                {
+                    if (user.Character.Level <= 10)
+                    {
+                        return;
+                    }
+
+                    var pets = _explorer.GetCharacter(user.Character.Realm, user.Character.Name,
+                        CharacterOptions.GetPetSlots);
+
+                    if (IsEqual(pets, me))
+                    {
+                        Debug.WriteLine($"FOUNDED {user.Character.Name} - {pets.PetSlots.Count()}");
+                    }
+                    
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine($"{user.Character.Name} {ex.Message}");
+                }
+            });
+
             if (File.Exists(BannedGuildsFileName))
             {
                 try
@@ -150,12 +189,12 @@ namespace WowSpy
 
             string error;
             GuildObject newGuild = null;
-            if (!BattleNetUtils.TryUpdateGuildPlayers(bannedGuildName, SelectedGuildServerName, ref newGuild, out error))
-            {
-                FlashThisWindow();
-                MessageBox.Show(error);
-                return;
-            }
+            //if (!BattleNetUtils.TryUpdateGuildPlayers(bannedGuildName, SelectedGuildServerName, ref newGuild, out error))
+            //{
+            //    FlashThisWindow();
+            //    MessageBox.Show(error);
+            //    return;
+            //}
 
             FlashThisWindow();
             BannedGuilds.Add(newGuild);
@@ -180,11 +219,11 @@ namespace WowSpy
                 PlayerName = PlayerNameTextBox.Text,
                 ServerName = SelectedPlayerServerName
             };
-            if (!BattleNetUtils.TryUpdatePlayerInfo(bannedPlayer))
-            {
-                FlashThisWindow();
-                MessageBox.Show("Не удалось обновить инфу");
-            }
+            //if (!BattleNetUtils.TryUpdatePlayerInfo(bannedPlayer))
+            //{
+            //    FlashThisWindow();
+            //    MessageBox.Show("Не удалось обновить инфу");
+            //}
 
             FlashThisWindow();
             BannedPlayers.Add(bannedPlayer);
@@ -219,13 +258,13 @@ namespace WowSpy
                 {
                     string error;
                     GuildObject newGuild = null;
-                    if (
-                        !BattleNetUtils.TryUpdateGuildPlayers(bannedGuild.GuildName, bannedGuild.ServerName,
-                            ref newGuild, out error))
-                    {
-                        MessageBox.Show(error);
-                        continue;
-                    }
+                    //if (
+                    //    !BattleNetUtils.TryUpdateGuildPlayers(bannedGuild.GuildName, bannedGuild.ServerName,
+                    //        ref newGuild, out error))
+                    //{
+                    //    MessageBox.Show(error);
+                    //    continue;
+                    //}
 
                     BannedGuilds.Remove(bannedGuild);
                     BannedGuilds.Add(newGuild);
@@ -237,14 +276,14 @@ namespace WowSpy
                 {
                     foreach (var player in bannedGuild.Players)
                     {
-                        BattleNetUtils.TryUpdatePlayerInfo(player);
+                        //BattleNetUtils.TryUpdatePlayerInfo(player);
                     }
                 }
             }
 
             foreach (var bannedPlayer in BannedPlayers)
             {
-                BattleNetUtils.TryUpdatePlayerInfo(bannedPlayer);
+                //BattleNetUtils.TryUpdatePlayerInfo(bannedPlayer);
             }
 
             FlashThisWindow();
@@ -265,14 +304,14 @@ namespace WowSpy
 
             string error;
             GuildObject newGuild = null;
-            if (
-                !BattleNetUtils.TryUpdateGuildPlayers(guildName, SelectedGuildCheckingServerName, ref newGuild,
-                    out error))
-            {
-                FlashThisWindow();
-                MessageBox.Show(error);
-                return;
-            }
+            //if (
+            //    !BattleNetUtils.TryUpdateGuildPlayers(guildName, SelectedGuildCheckingServerName, ref newGuild,
+            //        out error))
+            //{
+            //    FlashThisWindow();
+            //    MessageBox.Show(error);
+            //    return;
+            //}
             FlashThisWindow();
             GuildsForChecking.Add(newGuild);
         }
@@ -298,11 +337,11 @@ namespace WowSpy
                     ServerName = info[1]
                 };
 
-                if (!BattleNetUtils.TryUpdatePlayerInfo(newPlayer))
-                {
-                    MessageBox.Show("Не удалось получить иформацию об игроке: " + player);
-                    return;
-                }
+                //if (!BattleNetUtils.TryUpdatePlayerInfo(newPlayer))
+                //{
+                //    MessageBox.Show("Не удалось получить иформацию об игроке: " + player);
+                //    return;
+                //}
 
                 checkPlayerNames.Add(newPlayer);
             }
@@ -407,11 +446,11 @@ namespace WowSpy
             {
                 string error;
                 GuildObject newGuild = null;
-                if (!BattleNetUtils.TryUpdateGuildPlayers(guild.GuildName, guild.ServerName, ref newGuild, out error))
-                {
-                    MessageBox.Show(error);
-                    continue;
-                }
+                //if (!BattleNetUtils.TryUpdateGuildPlayers(guild.GuildName, guild.ServerName, ref newGuild, out error))
+                //{
+                //    MessageBox.Show(error);
+                //    continue;
+                //}
 
                 newGuild.LastUpdateTime = DateTime.Now;
                 GuildsForChecking.Remove(guild);

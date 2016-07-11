@@ -26,3 +26,5 @@ D:\!Premade\WowSpy\WowSpy\bin\Debug\HtmlAgilityPack.pdb
 D:\!Premade\WowSpy\WowSpy\bin\Debug\HtmlAgilityPack.xml
 D:\!Premade\WowSpy\WowSpy\obj\Debug\ResultWindow.baml
 D:\!Premade\WowSpy\WowSpy\obj\Debug\ResultWindow.g.cs
+D:\!Premade\wowspy\WowSpy\bin\Debug\WowDotNetAPI.dll
+D:\!Premade\wowspy\WowSpy\bin\Debug\WowDotNetAPI.pdb

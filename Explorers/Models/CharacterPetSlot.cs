@@ -23,5 +23,21 @@ namespace WowDotNetAPI.Models
 
         [DataMember(Name = "slot")]
         public int Slot { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            CharacterPetSlot another = (CharacterPetSlot) obj;
+
+            if (another.IsEmpty && IsEmpty)
+            {
+                return true;
+            }
+
+            return
+                another.Slot == Slot &&
+                another.IsLocked == IsLocked &&
+                another.BattlePetId == BattlePetId &&
+                another.Abilities.SequenceEqual(Abilities);
+        }
     }
 }
