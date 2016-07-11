@@ -13,21 +13,21 @@ namespace WowSpy.Utils
 {
     public static class PlayersUtils
     {
-        private static void Compare(IEnumerable<Player> bannedPlayers, Player checkingPlayer, out List<Player> matchs)
+        private static void Compare(IEnumerable<PlayerObj> bannedPlayers, PlayerObj checkingPlayer, out List<PlayerObj> matchs)
         {
-            matchs = new List<Player>();
+            matchs = new List<PlayerObj>();
             matchs.AddRange(bannedPlayers.Where(banned => banned.Equals(checkingPlayer)));
         }
 
-        public static Dictionary<Player, List<KeyValuePair<string, IEnumerable<Player>>>> Check(
-            IEnumerable<Player> bannedPlayers, 
-            IEnumerable<Guild> bannedGuilds, 
-            IEnumerable<Player> checkPlayerNames)
+        public static Dictionary<PlayerObj, List<KeyValuePair<string, IEnumerable<PlayerObj>>>> Check(
+            IEnumerable<PlayerObj> bannedPlayers, 
+            IEnumerable<GuildObject> bannedGuilds, 
+            IEnumerable<PlayerObj> checkPlayerNames)
         {
             
 
             // [ПроверяемыйИгрок - Список[ИмяГильдии - Список[Имя персонажа]]]
-            var resultPlayerDictionary = new Dictionary<Player, List<KeyValuePair<string, IEnumerable<Player>>>>();
+            var resultPlayerDictionary = new Dictionary<PlayerObj, List<KeyValuePair<string, IEnumerable<PlayerObj>>>>();
 
             foreach (var player in checkPlayerNames)
             {
@@ -36,16 +36,16 @@ namespace WowSpy.Utils
                     continue;
                 }
 
-                List<Player> buff;
+                List<PlayerObj> buff;
 
                 // Проверка по забанным игрокам
                 PlayersUtils.Compare(bannedPlayers.ToList(), player, out buff);
 
-                KeyValuePair<string, IEnumerable<Player>> value;
+                KeyValuePair<string, IEnumerable<PlayerObj>> value;
 
                 if (buff.Any())
                 {
-                    value = new KeyValuePair<string, IEnumerable<Player>>(
+                    value = new KeyValuePair<string, IEnumerable<PlayerObj>>(
                         player.GetGuild() , buff);
 
                     resultPlayerDictionary.AddOrUpdate(player, new[] { value });
@@ -58,7 +58,7 @@ namespace WowSpy.Utils
 
                     if (buff.Any())
                     {
-                        value = new KeyValuePair<string, IEnumerable<Player>>(bannedGuild.GuildName, buff);
+                        value = new KeyValuePair<string, IEnumerable<PlayerObj>>(bannedGuild.GuildName, buff);
                         resultPlayerDictionary.AddOrUpdate(player, new [] { value });
                     }
                 }
@@ -67,7 +67,7 @@ namespace WowSpy.Utils
             return resultPlayerDictionary;
         }
 
-        public static StringBuilder GetSummary(Dictionary<Player, List<KeyValuePair<string, IEnumerable<Player>>>> resultPlayerDictionary)
+        public static StringBuilder GetSummary(Dictionary<PlayerObj, List<KeyValuePair<string, IEnumerable<PlayerObj>>>> resultPlayerDictionary)
         {
             StringBuilder outBuilder = new StringBuilder();
 

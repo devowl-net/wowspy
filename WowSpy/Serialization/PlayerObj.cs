@@ -7,14 +7,14 @@ using Microsoft.Practices.Prism.Mvvm;
 namespace WowSpy.Serialization
 {
     [Serializable]
-    public class Player : BindableBase
+    public class PlayerObj : BindableBase
     {
         public string PlayerName { get; set; }
 
         public string GuildName { get; set; }
 
         public int TotalPetsCount { get; set; }
-        public List<Pet> Pets { get; set; }
+        public List<PetObj> Pets { get; set; }
 
         public string ServerName { get; set; }
 
@@ -25,7 +25,7 @@ namespace WowSpy.Serialization
 
         public override bool Equals(object obj)
         {
-            Player p1 = this, p2 = (Player)obj;
+            PlayerObj p1 = this, p2 = (PlayerObj)obj;
             if (ReferenceEquals(p1, p2))
             {
                 return true;

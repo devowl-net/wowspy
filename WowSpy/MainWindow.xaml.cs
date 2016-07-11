@@ -1,43 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Serialization;
-using Microsoft.Practices.Prism.ViewModel;
+using WowDotNetAPI;
 using WowSpy.Serialization;
 using WowSpy.Utils;
 
 namespace WowSpy
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow 
+    public partial class MainWindow
     {
-        public ObservableCollection<Guild> BannedGuilds { get; set; }
+        private const string BannedGuildsFileName = "BannedGuilds.txt";
 
-        public ObservableCollection<Player> BannedPlayers { get; set; }
+        private const string BannedPlayersFileName = "BannedPlayers.txt";
 
-        public ObservableCollection<Guild> GuildsForChecking { get; set; }
-
-        public List<string> ServerNames { get; set; }
-
-        public Guild SelectedGuildForChecking { get; set; }
+        private const string GuildsForCheckingFileName = "GuildsForChecking.txt";
+        
+        private string _apiKey = "pzdz2hfp2efzgkaf4khy2ubsp8ke4x7c";
+        private WowExplorer _explorer;
         public MainWindow()
         {
             Initialize();
@@ -45,31 +36,42 @@ namespace WowSpy
             InitializeComponent();
         }
 
-        private const string BannedGuildsFileName = "BannedGuilds.txt";
+        public ObservableCollection<GuildObject> BannedGuilds { get; set; }
 
-        private const string BannedPlayersFileName = "BannedPlayers.txt";
+        public ObservableCollection<PlayerObj> BannedPlayers { get; set; }
 
-        private const string GuildsForCheckingFileName = "GuildsForChecking.txt";
+        public ObservableCollection<GuildObject> GuildsForChecking { get; set; }
+
+        public List<string> ServerNames { get; set; }
+
+        public GuildObject SelectedGuildForChecking { get; set; }
+
+        public string SelectedPlayerServerName { get; set; }
+
+        public string SelectedGuildServerName { get; set; }
+
+        public string SelectedGuildCheckingServerName { get; set; }
 
         private void Initialize()
         {
+            _explorer = new WowExplorer(Region.EU, Locale.en_US, _apiKey);
             if (File.Exists(BannedGuildsFileName))
             {
                 try
                 {
                     using (TextReader textReader = new StreamReader(GuildsForCheckingFileName))
                     {
-                        var serializer = new XmlSerializer(typeof(List<Guild>));
-                        GuildsForChecking = new ObservableCollection<Guild>((List<Guild>)serializer.Deserialize(textReader));
+                        var serializer = new XmlSerializer(typeof (List<GuildObject>));
+                        GuildsForChecking =
+                            new ObservableCollection<GuildObject>((List<GuildObject>) serializer.Deserialize(textReader));
                     }
                 }
                 catch
                 {
-
                 }
             }
 
-            GuildsForChecking = GuildsForChecking ?? new ObservableCollection<Guild>();
+            GuildsForChecking = GuildsForChecking ?? new ObservableCollection<GuildObject>();
 
             if (File.Exists(BannedGuildsFileName))
             {
@@ -77,17 +79,17 @@ namespace WowSpy
                 {
                     using (TextReader textReader = new StreamReader(BannedGuildsFileName))
                     {
-                        var serializer = new XmlSerializer(typeof(List<Guild>));
-                        BannedGuilds = new ObservableCollection<Guild>((List<Guild>)serializer.Deserialize(textReader));
+                        var serializer = new XmlSerializer(typeof (List<GuildObject>));
+                        BannedGuilds =
+                            new ObservableCollection<GuildObject>((List<GuildObject>) serializer.Deserialize(textReader));
                     }
                 }
                 catch
                 {
-                    
                 }
             }
 
-            BannedGuilds = BannedGuilds ?? new ObservableCollection<Guild>();
+            BannedGuilds = BannedGuilds ?? new ObservableCollection<GuildObject>();
 
 
             if (File.Exists(BannedPlayersFileName))
@@ -96,41 +98,40 @@ namespace WowSpy
                 {
                     using (TextReader textReader = new StreamReader(BannedPlayersFileName))
                     {
-                        var serializer = new XmlSerializer(typeof (List<Player>));
+                        var serializer = new XmlSerializer(typeof (List<PlayerObj>));
                         BannedPlayers =
-                            new ObservableCollection<Player>((List<Player>) serializer.Deserialize(textReader));
+                            new ObservableCollection<PlayerObj>((List<PlayerObj>) serializer.Deserialize(textReader));
                     }
                 }
                 catch
                 {
-                    
                 }
             }
-            
-            BannedPlayers = BannedPlayers ?? new ObservableCollection<Player>();    
-            
-            ServerNames = new List<string>()
+
+            BannedPlayers = BannedPlayers ?? new ObservableCollection<PlayerObj>();
+
+            ServerNames = new List<string>
             {
-                "Страж Смерти"       ,
-                "Черный Шрам"        ,
-                "Свежеватель душ"    ,
-                "Ревущий фьорд"      ,
+                "Страж Смерти",
+                "Черный Шрам",
+                "Свежеватель душ",
+                "Ревущий фьорд",
                 "Азурегос",
                 "Борейская тундра",
                 "Вечная Песня",
                 "Галакронд",
                 "Голдринн",
-                "Гордунни"           ,
-                "Гром"               ,
-                "Термоштепсель"      ,
-                "Дракономор"         ,
-                "Пиратская бухта"    ,
-                "Ткач Смерти"        ,
-                "Король-лич"         ,
-                "Седогрив"           ,
-                "Подземье"           ,
-                "Разувий"            ,
-                "Ясеневый лес"       
+                "Гордунни",
+                "Гром",
+                "Термоштепсель",
+                "Дракономор",
+                "Пиратская бухта",
+                "Ткач Смерти",
+                "Король-лич",
+                "Седогрив",
+                "Подземье",
+                "Разувий",
+                "Ясеневый лес"
             };
         }
 
@@ -148,7 +149,7 @@ namespace WowSpy
             }
 
             string error;
-            Guild newGuild = null;
+            GuildObject newGuild = null;
             if (!BattleNetUtils.TryUpdateGuildPlayers(bannedGuildName, SelectedGuildServerName, ref newGuild, out error))
             {
                 FlashThisWindow();
@@ -159,12 +160,6 @@ namespace WowSpy
             FlashThisWindow();
             BannedGuilds.Add(newGuild);
         }
-
-        public string SelectedPlayerServerName { get; set; }
-
-        public string SelectedGuildServerName { get; set; }
-
-        public string SelectedGuildCheckingServerName { get; set; }
 
         private void AddPlayerToBan(object sender, RoutedEventArgs e)
         {
@@ -180,7 +175,7 @@ namespace WowSpy
                 }
             }
 
-            var bannedPlayer = new Player
+            var bannedPlayer = new PlayerObj
             {
                 PlayerName = PlayerNameTextBox.Text,
                 ServerName = SelectedPlayerServerName
@@ -195,29 +190,26 @@ namespace WowSpy
             BannedPlayers.Add(bannedPlayer);
         }
 
-        private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             using (TextWriter textWriter = new StreamWriter(BannedGuildsFileName))
             {
-                var serializer = new XmlSerializer(typeof(List<Guild>));
+                var serializer = new XmlSerializer(typeof (List<GuildObject>));
                 serializer.Serialize(textWriter, BannedGuilds.ToList());
             }
 
             using (TextWriter textWriter = new StreamWriter(BannedPlayersFileName))
             {
-                var serializer = new XmlSerializer(typeof(List<Player>));
+                var serializer = new XmlSerializer(typeof (List<PlayerObj>));
                 serializer.Serialize(textWriter, BannedPlayers.ToList());
             }
 
             using (TextWriter textWriter = new StreamWriter(GuildsForCheckingFileName))
             {
-                var serializer = new XmlSerializer(typeof(List<Guild>));
+                var serializer = new XmlSerializer(typeof (List<GuildObject>));
                 serializer.Serialize(textWriter, GuildsForChecking.ToList());
             }
-            
         }
-
-        private readonly Task[] _scranners = new Task[Environment.ProcessorCount];
 
         private void StartScan(object sender, RoutedEventArgs e)
         {
@@ -226,17 +218,18 @@ namespace WowSpy
                 foreach (var bannedGuild in BannedGuilds.ToList())
                 {
                     string error;
-                    Guild newGuild = null;
-                    if (!BattleNetUtils.TryUpdateGuildPlayers(bannedGuild.GuildName, bannedGuild.ServerName, ref newGuild, out error))
+                    GuildObject newGuild = null;
+                    if (
+                        !BattleNetUtils.TryUpdateGuildPlayers(bannedGuild.GuildName, bannedGuild.ServerName,
+                            ref newGuild, out error))
                     {
-                        
                         MessageBox.Show(error);
                         continue;
                     }
 
                     BannedGuilds.Remove(bannedGuild);
                     BannedGuilds.Add(newGuild);
-                } 
+                }
             }
             else
             {
@@ -259,7 +252,6 @@ namespace WowSpy
 
         private void Processor(object obj)
         {
-            
         }
 
         private void AddGuildToChecking(object sender, RoutedEventArgs e)
@@ -272,8 +264,10 @@ namespace WowSpy
             }
 
             string error;
-            Guild newGuild = null;
-            if (!BattleNetUtils.TryUpdateGuildPlayers(guildName, SelectedGuildCheckingServerName, ref newGuild, out error))
+            GuildObject newGuild = null;
+            if (
+                !BattleNetUtils.TryUpdateGuildPlayers(guildName, SelectedGuildCheckingServerName, ref newGuild,
+                    out error))
             {
                 FlashThisWindow();
                 MessageBox.Show(error);
@@ -286,9 +280,9 @@ namespace WowSpy
 
         private void CheckPlayersList(object sender, RoutedEventArgs e)
         {
-            var checkPlayerNames = new List<Player>();
+            var checkPlayerNames = new List<PlayerObj>();
             var playersList = TbRaidPlayersForCheck.Text;
-            var playersSplits = playersList.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            var playersSplits = playersList.Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var player in playersSplits)
             {
                 var info = player.Split('-');
@@ -298,7 +292,7 @@ namespace WowSpy
                     return;
                 }
 
-                var newPlayer = new Player
+                var newPlayer = new PlayerObj
                 {
                     PlayerName = info[0],
                     ServerName = info[1]
@@ -336,7 +330,6 @@ namespace WowSpy
             base.OnActivated(e);
         }
 
-        
 
         private void CheckGuildList(object sender, RoutedEventArgs e)
         {
@@ -346,7 +339,7 @@ namespace WowSpy
                 return;
             }
 
-            StringBuilder outBuilder = new StringBuilder();
+            var outBuilder = new StringBuilder();
             foreach (var guild in GuildsForChecking)
             {
                 var resultPlayerDictionary = PlayersUtils.Check(BannedPlayers, BannedGuilds, guild.Players);
@@ -369,60 +362,13 @@ namespace WowSpy
             }
         }
 
-        #region FlashWindow
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct FLASHWINFO
-        {
-            public UInt32 cbSize;
-            public IntPtr hwnd;
-            public UInt32 dwFlags;
-            public UInt32 uCount;
-            public UInt32 dwTimeout;
-        }
-
-
-        /// <summary>
-        /// Flashes a window
-        /// </summary>
-        /// <param name="hWnd">The handle to the window to flash</param>
-        /// <returns>whether or not the window needed flashing</returns>
-        public bool FlashThisWindow()
-        {
-            FLASHWINFO fInfo = new FLASHWINFO();
-
-            fInfo.cbSize = Convert.ToUInt32(Marshal.SizeOf(fInfo));
-            fInfo.hwnd = new WindowInteropHelper(this).Handle;
-            fInfo.dwFlags = 3;
-            fInfo.uCount = UInt32.MaxValue;
-            fInfo.dwTimeout = 0;
-
-            return FlashWindowEx(ref fInfo);
-        }
-
-        public bool StopFlashingWindow()
-        {
-            var hWnd = new WindowInteropHelper(this).Handle;
-            if (IntPtr.Zero != hWnd)
-            {
-                FLASHWINFO fi = new FLASHWINFO();
-                fi.cbSize = (uint)Marshal.SizeOf(typeof(FLASHWINFO));
-                fi.dwFlags = 0;
-                fi.hwnd = hWnd;
-
-                return FlashWindowEx(ref fi);
-            }
-            return false;
-        }
-        #endregion
-
         private void RemoveGuildToBan(object sender, RoutedEventArgs e)
         {
             var guildForRemove =
-                BannedGuilds.FirstOrDefault(guild => guild.GuildName.ToLower() == GuildNameTextBox.Text.ToLower() && guild.ServerName.ToLower() == SelectedGuildServerName.ToLower());
+                BannedGuilds.FirstOrDefault(
+                    guild =>
+                        guild.GuildName.ToLower() == GuildNameTextBox.Text.ToLower() &&
+                        guild.ServerName.ToLower() == SelectedGuildServerName.ToLower());
 
             if (guildForRemove == null)
             {
@@ -436,7 +382,10 @@ namespace WowSpy
         private void RemovePlayerFromBan(object sender, RoutedEventArgs e)
         {
             var playerForRemove =
-                BannedPlayers.FirstOrDefault(player => player.GuildName.ToLower() == PlayerNameTextBox.Text.ToLower() && player.ServerName.ToLower() == SelectedPlayerServerName.ToLower());
+                BannedPlayers.FirstOrDefault(
+                    player =>
+                        player.GuildName.ToLower() == PlayerNameTextBox.Text.ToLower() &&
+                        player.ServerName.ToLower() == SelectedPlayerServerName.ToLower());
 
             if (playerForRemove == null)
             {
@@ -449,7 +398,6 @@ namespace WowSpy
 
         private void RemoveGuildToChecking(object sender, RoutedEventArgs e)
         {
-
             GuildsForChecking.Remove(SelectedGuildForChecking);
         }
 
@@ -458,7 +406,7 @@ namespace WowSpy
             foreach (var guild in GuildsForChecking.ToList())
             {
                 string error;
-                Guild newGuild = null;
+                GuildObject newGuild = null;
                 if (!BattleNetUtils.TryUpdateGuildPlayers(guild.GuildName, guild.ServerName, ref newGuild, out error))
                 {
                     MessageBox.Show(error);
@@ -472,5 +420,57 @@ namespace WowSpy
 
             FlashThisWindow();
         }
+
+        #region FlashWindow
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct FLASHWINFO
+        {
+            public uint cbSize;
+            public IntPtr hwnd;
+            public uint dwFlags;
+            public uint uCount;
+            public uint dwTimeout;
+        }
+
+
+        /// <summary>
+        ///     Flashes a window
+        /// </summary>
+        /// <param name="hWnd">The handle to the window to flash</param>
+        /// <returns>whether or not the window needed flashing</returns>
+        public bool FlashThisWindow()
+        {
+            var fInfo = new FLASHWINFO();
+
+            fInfo.cbSize = Convert.ToUInt32(Marshal.SizeOf(fInfo));
+            fInfo.hwnd = new WindowInteropHelper(this).Handle;
+            fInfo.dwFlags = 3;
+            fInfo.uCount = uint.MaxValue;
+            fInfo.dwTimeout = 0;
+
+            return FlashWindowEx(ref fInfo);
+        }
+
+        public bool StopFlashingWindow()
+        {
+            var hWnd = new WindowInteropHelper(this).Handle;
+            if (IntPtr.Zero != hWnd)
+            {
+                var fi = new FLASHWINFO();
+                fi.cbSize = (uint) Marshal.SizeOf(typeof (FLASHWINFO));
+                fi.dwFlags = 0;
+                fi.hwnd = hWnd;
+
+                return FlashWindowEx(ref fi);
+            }
+            return false;
+        }
+
+        #endregion
     }
 }

@@ -9,8 +9,8 @@ namespace WowSpy.Utils
 {
     public static class Extentions
     {
-        public static void AddOrUpdate(this Dictionary<Player, List<KeyValuePair<string, IEnumerable<Player>>>> dictionary,
-            Player key, IEnumerable<KeyValuePair<string, IEnumerable<Player>>> value)
+        public static void AddOrUpdate(this Dictionary<PlayerObj, List<KeyValuePair<string, IEnumerable<PlayerObj>>>> dictionary,
+            PlayerObj key, IEnumerable<KeyValuePair<string, IEnumerable<PlayerObj>>> value)
         {
             var itemKeys = dictionary.Where(
                 item =>
@@ -30,7 +30,7 @@ namespace WowSpy.Utils
 
         public const string EmptyGuildName = "NoName";
 
-        public static string GetGuild(this Player player)
+        public static string GetGuild(this PlayerObj player)
         {
             return player.GuildName == null ? EmptyGuildName : string.Concat(player.GuildName, "-", player.ServerName);
         }

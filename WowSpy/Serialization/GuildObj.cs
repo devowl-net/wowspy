@@ -8,14 +8,14 @@ using Microsoft.Practices.Prism.ViewModel;
 namespace WowSpy.Serialization
 {
     [Serializable]
-    public class Guild : BindableBase
+    public class GuildObject : BindableBase
     {
         public DateTime? LastUpdateTime { get; set; }
         public string GuildName { get; set; }
 
         public string ServerName { get; set; }
 
-        public List<Player> Players { get; set; }
+        public List<PlayerObj> Players { get; set; }
 
         public override string ToString()
         {

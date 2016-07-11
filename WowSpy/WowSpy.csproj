@@ -83,10 +83,9 @@
     <Compile Include="ResultWindow.xaml.cs">
       <DependentUpon>ResultWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Serialization\Guild.cs" />
-    <Compile Include="Serialization\Pet.cs" />
-    <Compile Include="Serialization\Player.cs" />
-    <Compile Include="Utils\BattleNetUtils.cs" />
+    <Compile Include="Serialization\GuildObj.cs" />
+    <Compile Include="Serialization\PetObj.cs" />
+    <Compile Include="Serialization\PlayerObj.cs" />
     <Compile Include="Utils\Extentions.cs" />
     <Compile Include="Utils\PlayersUtils.cs" />
     <Page Include="MainWindow.xaml">
@@ -137,6 +136,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Horde.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Explorers\Explorers.csproj">
+      <Project>{2a828141-9ef2-4a8a-8944-b2f2d1775cc9}</Project>
+      <Name>Explorers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

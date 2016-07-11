@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace WowSpy.Serialization
 {
     [Serializable]
-    public class Pet
+    public class PetObj
     {
         public string Name { get; set; }
 
@@ -16,7 +16,7 @@ namespace WowSpy.Serialization
 
         public override bool Equals(object obj)
         {
-            Pet pet1 = this, pet2 = (Pet)obj;
+            PetObj pet1 = this, pet2 = (PetObj)obj;
             if (ReferenceEquals(pet1, pet2))
             {
                 return true;
