@@ -1,0 +1,113 @@
+﻿<Window x:Class="WowSpy.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" MinHeight="424" MinWidth="1050" Height="504" Width="1050" Closing="OnWindowClosing">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <DockPanel Background="LightCyan">
+            
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <TextBlock Text="В бан гильдию" DockPanel.Dock="Top"  Margin="5"/>
+                <TextBox x:Name="GuildNameTextBox" Width="100" Margin="5" />
+                <ComboBox SelectedItem="{Binding SelectedGuildServerName}" ItemsSource="{Binding ServerNames}" IsSynchronizedWithCurrentItem="True" />
+                <Button Content="Добавить" Click="AddGuildToBan" Margin="5" />
+                <Button Content="Удалить" Click="RemoveGuildToBan" Margin="5" />
+            </StackPanel> 
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <TextBlock Text="В бан игрока" DockPanel.Dock="Top"  Margin="5"/>
+                <TextBox x:Name="PlayerNameTextBox" Width="100" Margin="5" />
+                <ComboBox SelectedItem="{Binding SelectedPlayerServerName}" ItemsSource="{Binding ServerNames}" IsSynchronizedWithCurrentItem="True" />
+                <Button Content="Добавить" Click="AddPlayerToBan" Margin="5" />
+                <Button Content="Удалить" Click="RemovePlayerFromBan" Margin="5" />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" DockPanel.Dock="Top">
+                <CheckBox Content="Сканирование списка участников" x:Name="ChGuildFullCheck" />
+                <Button Content="Повторное сканирование" Margin="5" Click="StartScan" />
+            </StackPanel>
+            <TreeView DockPanel.Dock="Top" Margin="5" >
+                <TreeViewItem Header="Игроки" ItemsSource="{Binding BannedPlayers}">
+                    <TreeViewItem.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock >
+                                <Run Text="{Binding PlayerName}" />-<Run Text="{Binding ServerName}" />(<Run Text="{Binding GuildName}" />)
+                            </TextBlock>
+                        </DataTemplate>
+                    </TreeViewItem.ItemTemplate>
+                </TreeViewItem>
+                <TreeViewItem Header="Гильдии" ItemsSource="{Binding BannedGuilds}">
+                    <TreeViewItem.ItemTemplate>
+                        <DataTemplate>
+                            <TreeViewItem ItemsSource="{Binding Players}" Header="{Binding}">
+                                <TreeViewItem.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <Run Text="{Binding PlayerName}" />-<Run Text="{Binding ServerName}" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </TreeViewItem.ItemTemplate>
+                            </TreeViewItem>
+                        </DataTemplate>
+                    </TreeViewItem.ItemTemplate>
+                </TreeViewItem>
+            </TreeView>
+            
+        </DockPanel>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="Auto" />
+                <RowDefinition  Height="Auto" MinHeight="200"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            
+            <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Background="DarkSeaGreen">
+                <Label Content="Список гильдий для проверки" DockPanel.Dock="Top"  />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ListBox Margin="5" ItemsSource="{Binding GuildsForChecking}" SelectedItem="{Binding SelectedGuildForChecking}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="{Binding GuildName}" /> - <Run Text="{Binding ServerName}" /> (<Run Text="{Binding Players.Count, Mode=OneWay}" />) 
+                                </TextBlock>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" >
+                        <TextBlock Text="На проверку гильдию" Margin="5"/>
+                        <TextBox x:Name="CheckingGuildNameTextBox" Width="100" Margin="5" />
+                        <ComboBox SelectedItem="{Binding SelectedGuildCheckingServerName}" ItemsSource="{Binding ServerNames}" IsSynchronizedWithCurrentItem="True" />
+                        <Button Content="Добавить" Click="AddGuildToChecking" Margin="5" />
+                        <Button Content="Удалить выбранную" Click="RemoveGuildToChecking" Margin="5" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <Button  HorizontalAlignment="Left" Content="Проверить гильдии" Margin="5" Click="CheckGuildList" />
+                        <Button Content="Повторное сканирование списка участников" Margin="5" Click="CheckingGuildStartScan" />
+                    </StackPanel>
+                </Grid>
+            </DockPanel>
+            <Grid Grid.Row="2" Grid.ColumnSpan="2" Background="AntiqueWhite">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition  />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label Content="Списко участников для проверки. Формат: [ИмяИгрока-ИмяСервера]" />
+                <TextBox Margin="5" x:Name="TbRaidPlayersForCheck" TextWrapping="Wrap" AcceptsReturn="True" Grid.Row="1" Text="Ярославль-Страж Смерти" />
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <Button  HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Content="Проверить список участников" Margin="5" Click="CheckPlayersList" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
