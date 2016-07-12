@@ -288,8 +288,14 @@ namespace WowSpy
                     reportError.AppendLine("Не удалось проверить" + player + Environment.NewLine + ex.Message);
                 }
             });
-            var bannedGuildInfo = 
-                BannedGuilds.Select(bannedGuild => _explorer.GetGuild(Region.EU, bannedGuild.ServerName, bannedGuild.GuildName, GuildOptions.GetMembers)).ToList();
+            
+            var temporaryBannedGuildPlayers = 
+                BannedGuilds.Select(bannedGuild => _explorer.GetGuild(Region.EU, bannedGuild.ServerName, bannedGuild.GuildName, GuildOptions.GetMembers)).Select(guild => guild.Members).SelectMany();
+
+            foreach (var bannedGuild in temporaryBannedGuilds)
+            {
+                    
+            }
 
             if (outBuilder.Length == 0)
             {
