@@ -289,23 +289,23 @@ namespace WowSpy
                 }
             });
             
-            var temporaryBannedGuildPlayers = 
-                BannedGuilds.Select(bannedGuild => _explorer.GetGuild(Region.EU, bannedGuild.ServerName, bannedGuild.GuildName, GuildOptions.GetMembers)).Select(guild => guild.Members).SelectMany();
+            //var temporaryBannedGuildPlayers = 
+            //    BannedGuilds.Select(bannedGuild => _explorer.GetGuild(Region.EU, bannedGuild.ServerName, bannedGuild.GuildName, GuildOptions.GetMembers)).Select(guild => guild.Members).SelectMany();
 
-            foreach (var bannedGuild in temporaryBannedGuilds)
-            {
+            //foreach (var bannedGuild in temporaryBannedGuilds)
+            //{
                     
-            }
+            //}
 
-            if (outBuilder.Length == 0)
-            {
-                MessageBox.Show("Проверка завершена. Игроки чистые :)");
-            }
-            else
-            {
-                var resultWindow = new ResultWindow(outBuilder.ToString());
-                resultWindow.ShowDialog();
-            }
+            //if (outBuilder.Length == 0)
+            //{
+            //    MessageBox.Show("Проверка завершена. Игроки чистые :)");
+            //}
+            //else
+            //{
+            //    var resultWindow = new ResultWindow(outBuilder.ToString());
+            //    resultWindow.ShowDialog();
+            //}
         }
 
 
