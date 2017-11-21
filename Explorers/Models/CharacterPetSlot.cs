@@ -12,8 +12,8 @@ namespace WowDotNetAPI.Models
         [DataMember(Name = "abilities")]
         public IEnumerable<int> Abilities { get; set; }
 
-        [DataMember(Name = "battlePetId")]
-        public int BattlePetId { get; set; }
+        [DataMember(Name = "battlePetGuid")]
+        public string BattlePetGuid { get; set; }
 
         [DataMember(Name = "isEmpty")]
         public bool IsEmpty { get; set; }
@@ -36,7 +36,7 @@ namespace WowDotNetAPI.Models
             return
                 another.Slot == Slot &&
                 another.IsLocked == IsLocked &&
-                another.BattlePetId == BattlePetId &&
+                another.BattlePetGuid == BattlePetGuid &&
                 another.Abilities.SequenceEqual(Abilities);
         }
     }

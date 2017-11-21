@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Net;
@@ -561,7 +562,7 @@ namespace WowDotNetAPI
             return JsonUtility.FromJSON<T>(url);
         }
 
-        private void TryGetData<T>(string url, out T requestedObject) where T : class
+        private bool TryGetData<T>(string url, out T requestedObject) where T : class
         {
             try
             {
@@ -569,9 +570,13 @@ namespace WowDotNetAPI
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(">");
+                Debug.WriteLine(url + Environment.NewLine + ex.Message);
                 requestedObject = null;
-                throw ex;
+                return false;
             }
+
+            return true;
         }
     }
 }

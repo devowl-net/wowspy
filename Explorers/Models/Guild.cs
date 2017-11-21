@@ -51,10 +51,10 @@ namespace WowDotNetAPI.Models
 
         public UnitSide Side { get { return (UnitSide)Enum.Parse(typeof(UnitSide), Enum.GetName(typeof(UnitSide), side)); } }
 
-        public override int GetHashCode()
-        {
-            return Name.GetHashCode() ^ Realm.GetHashCode() ^ Battlegroup.GetHashCode() ^ side.GetHashCode() ^
-                   AchievementPoints.GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return Name.GetHashCode() ^ Realm.GetHashCode() ^ Battlegroup.GetHashCode() ^ side.GetHashCode() ^
+        //           AchievementPoints.GetHashCode();
+        //}
     }
 }

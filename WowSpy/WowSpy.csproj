@@ -64,6 +64,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -84,9 +85,7 @@
     <Compile Include="ResultWindow.xaml.cs">
       <DependentUpon>ResultWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Serialization\GuildObj.cs" />
-    <Compile Include="Serialization\PetObj.cs" />
-    <Compile Include="Serialization\PlayerObj.cs" />
+    <Compile Include="Utils\BattleNetUtils.cs" />
     <Compile Include="Utils\Extentions.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

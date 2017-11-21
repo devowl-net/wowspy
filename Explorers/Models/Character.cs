@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
@@ -50,6 +51,7 @@ namespace WowDotNetAPI.Models
     }
 
     [DataContract]
+    [DebuggerDisplay("{Name}-{Realm}")]
     public class Character : IComparable<Character>
     {
         [DataMember(Name = "lastModified")]
@@ -151,6 +153,11 @@ namespace WowDotNetAPI.Models
             }
 
             return -1;
+        }
+
+        public override string ToString()
+        {
+            return $"{Name}-{Realm} {Class}";
         }
     }
 }
